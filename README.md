@@ -1,4 +1,4 @@
-Platform: Flutter (Dart) | Durum: Tamamlandı | Yıl: 2025
+Platform: Flutter (Dart) 
 
 🔧 Kullanılan Teknolojiler:
 Flutter: Uygulamanın tüm arayüzü ve mantığı Dart dili ile Flutter framework'ü kullanılarak geliştirildi.
