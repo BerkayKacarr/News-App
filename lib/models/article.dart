@@ -13,7 +13,6 @@ class Article {
     required this.publishedAt,
   });
 
-  // JSON'dan veri çekmek için factory constructor
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
       title: json['title'] ?? 'No title available',
