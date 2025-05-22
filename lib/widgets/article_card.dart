@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/models/article.dart';
 import 'package:intl/intl.dart';
+import 'package:news_app/views/detail_view.dart';
 
 class ArticleCard extends StatelessWidget {
   final Article article;
@@ -25,8 +26,12 @@ class ArticleCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          // Detay sayfasına yönlendirme (sonraki adım)
-          // Navigator.push(...);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailView(article: article),
+            ),
+          );
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:news_app/providers/providers.dart';
 import 'package:news_app/widgets/article_card.dart';
-import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -14,43 +14,38 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    // Uygulama ilk açıldığında haberleri çek
-    Provider.of<NewsProvider>(context, listen: false).fetchNews();
+
+    // Build tamamlandıktan sonra fetchNews çağrısı
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<NewsProvider>(context, listen: false).fetchNews();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final newsProvider = Provider.of<NewsProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Güncel Haberler"), centerTitle: true),
-      body: RefreshIndicator(
-        onRefresh: () => newsProvider.fetchNews(),
-        child: Builder(
-          builder: (context) {
-            if (newsProvider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (newsProvider.hasError) {
-              return Center(
-                child: Text(
-                  'Bir hata oluştu. Lütfen tekrar deneyin.',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              );
-            } else {
-              final articles = newsProvider.articles;
+    if (newsProvider.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
-              return ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(12),
-                itemCount: articles.length,
-                itemBuilder: (context, index) {
-                  return ArticleCard(article: articles[index]);
-                },
-              );
-            }
-          },
-        ),
+    if (newsProvider.hasError) {
+      return const Scaffold(
+        body: Center(child: Text('Haberler yüklenirken hata oluştu.')),
+      );
+    }
+
+    if (newsProvider.articles.isEmpty) {
+      return const Scaffold(body: Center(child: Text('Henüz haber yok.')));
+    }
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Gündem Haberleri')),
+      body: ListView.builder(
+        itemCount: newsProvider.articles.length,
+        itemBuilder: (context, index) {
+          return ArticleCard(article: newsProvider.articles[index]);
+        },
       ),
     );
   }
